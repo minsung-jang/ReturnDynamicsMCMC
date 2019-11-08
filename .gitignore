@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+
+# QtCreator
+build/
+*.txt.user
+
+# Output files
+*.csv
+*.csv#
+logfile/*.csv
+simulation/*.csv
+
