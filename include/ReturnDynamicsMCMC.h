@@ -17,6 +17,8 @@
 #include <assert.h>
 // Eigen
 #include <Eigen/Dense>
+// Custom
+#include "MyStatDist.h"
 
 using namespace std;
 using namespace Eigen;
@@ -44,6 +46,10 @@ class ReturnDynamicsMCMC{
 private:
     long T;
 public:
+    // AUX
+    bool _CHECK_STREAM;
+    default_random_engine main_generator;
+
     // Input sample
     vector<VectorXd> Y_sample;
     vector<VectorXd> mu_sample;
@@ -71,22 +77,35 @@ public:
     // Contructor & Destructor
     ReturnDynamicsMCMC(){
         true_param=nullptr;
+        _CHECK_STREAM=true;
+        long seed = chrono::system_clock::now().time_since_epoch().count();
+        default_random_engine generator(seed);
+        main_generator = generator;
     }
     ~ReturnDynamicsMCMC(){}
 
     // Member Functions
     // ... Posterior: pre-computation
+    double stdNormalCDF(double z);
     VectorXd compute_tp1(VectorXd& vec);
     VectorXd compute_tp0(VectorXd& vec);
     VectorXd compute_disp_vec(VectorXd& vec1, VectorXd& vec2, double coeff=1.0);
     VectorXd compute_disp_const(VectorXd& vec, double coeff);
+    double compute_K(VectorXd& mu_vec, VectorXd& Y_vec);
     // ... Posterior
     double posterior_E_mu(default_random_engine& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+    double posterior_beta(default_random_engine& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+    double posterior_sig_y(default_random_engine& generator,
+                           VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+    vector<double> posterior_phi_omega(default_random_engine& generator1,
+                                       VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+    VectorXd posterior_mu(VectorXd& mu_vec, VectorXd& Y_vec);
     // ... MCMC
     void getIntervalSize(VectorXd& mu_vec, VectorXd& Y_vec);
     void getInitialGuess(ParamSet& init_guess);
     void getHyperParam(HyperParamSet& hyper_param);
-    void initSimulation(int& n_path, int& length,ParamSet& simul_thetha, double mu_0=0.0, bool OUTPUT_FILE=true);
+    void loadCSV(string file_name);
+    void initSimulation(int& n_path, int& length,ParamSet& simul_thetha, bool OUTPUT_FILE=true);
     void runMCMC(int& n_path, long& n_iter, ParamSet& init_guess, HyperParamSet& hyper_param, bool LOG_FILE=true);
 };
 

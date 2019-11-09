@@ -17,9 +17,9 @@ int main()
     ParamSet init_guess;
     HyperParamSet hyper_param;
     int n_simul_path = 1;
-    int n_simul_length = 5000;
-    long n_iter=2000;
-    bool REFRESH_SIMUL=true;
+    int n_simul_length = 1000;
+    long n_iter=30;
+    bool REFRESH_SIMUL=false;
 
     // Simulation
     if (REFRESH_SIMUL){
@@ -33,6 +33,8 @@ int main()
         rdMCMC->initSimulation(n_simul_path, n_simul_length, simul_theta);
     }else {
         // Load csv data
+        rdMCMC->loadCSV("../simulation/mcmc_cpp.csv");
+        cout << rdMCMC->Y_sample[0].size() << endl;
     }
 
     // MCMC
@@ -53,10 +55,11 @@ int main()
     hyper_param.a=2;
     hyper_param.b=200;
 
+    // Run MCMC
     try {
         rdMCMC->runMCMC(n_simul_path, n_iter, init_guess, hyper_param);
     } catch (const exception& e) {
-        cout << e.what() << endl;
+        cout << "ERROR OCCURRED: " << e.what() << endl;
     }
 
     clock_t time_end=clock();
