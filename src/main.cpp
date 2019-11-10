@@ -45,6 +45,12 @@ int main()
     init_guess.sig_y=1.0;
     init_guess.sig_mu=1.0;
 
+//        init_guess.E_mu =0.1;
+//        init_guess.beta=0.9;
+//        init_guess.rho=-0.5;
+//        init_guess.sig_y=0.15;
+//        init_guess.sig_mu=0.1;
+
     // Set Hyperparameters
     hyper_param.e=0.0;
     hyper_param.E=1.0;

@@ -164,6 +164,9 @@ void ReturnDynamicsMCMC::runMCMC(int& n_path, long& n_iter,
         VectorXd Y_input = Y_sample[s];
         VectorXd mu_input = Y_input;
 
+        Y_current = Y_input;
+        mu_current = mu_input;
+
         // Determine T
         getIntervalSize(mu_input,Y_input);
 
@@ -181,6 +184,10 @@ void ReturnDynamicsMCMC::runMCMC(int& n_path, long& n_iter,
                    rho << endl;
 
         bool DEBUG = false;
+
+        //long seed = chrono::system_clock::now().time_since_epoch().count();
+        random_device seed_gen;
+        default_random_engine main_generator(seed_gen());
 
         for (long k=0; k < n_iter; k++){
 
@@ -227,8 +234,7 @@ void ReturnDynamicsMCMC::runMCMC(int& n_path, long& n_iter,
             logFile << sig_mu << ", " << rho << endl;
 
             // [5] mu
-            mu_input = posterior_mu(mu_input, Y_input);
-
+            mu_input = posterior_mu(main_generator, mu_input, Y_input,DEBUG);
         }
         logFile.close();
 

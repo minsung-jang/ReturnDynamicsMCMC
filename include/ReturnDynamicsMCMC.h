@@ -48,11 +48,12 @@ private:
 public:
     // AUX
     bool _CHECK_STREAM;
-    default_random_engine main_generator;
 
     // Input sample
     vector<VectorXd> Y_sample;
     vector<VectorXd> mu_sample;
+    VectorXd Y_current;
+    VectorXd mu_current;
 
     // Simulation
     ParamSet* true_param;
@@ -78,9 +79,6 @@ public:
     ReturnDynamicsMCMC(){
         true_param=nullptr;
         _CHECK_STREAM=true;
-        long seed = chrono::system_clock::now().time_since_epoch().count();
-        default_random_engine generator(seed);
-        main_generator = generator;
     }
     ~ReturnDynamicsMCMC(){}
 
@@ -99,7 +97,7 @@ public:
                            VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
     vector<double> posterior_phi_omega(default_random_engine& generator1,
                                        VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
-    VectorXd posterior_mu(VectorXd& mu_vec, VectorXd& Y_vec);
+    VectorXd posterior_mu(default_random_engine& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
     // ... MCMC
     void getIntervalSize(VectorXd& mu_vec, VectorXd& Y_vec);
     void getInitialGuess(ParamSet& init_guess);
