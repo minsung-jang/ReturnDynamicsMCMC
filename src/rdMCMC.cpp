@@ -237,7 +237,7 @@ void ReturnDynamicsMCMC::initSimulation(){
         Y[0]=simul_theta.E_mu;
 
         // Output file per path
-        string file_name = "../simulation/MCMC_simulation_[" + to_string(k+1) + "].csv";
+        string file_name = "../log/simul_path_" + to_string(k+1) + ".csv";
         ofstream outputFile(file_name);
         outputFile << "Parameters: E_mu = " << simul_theta.E_mu << ", " <<
                       "beta = " << simul_theta.beta << ", " <<
@@ -284,26 +284,27 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
     cout << "[ ================= Run MCMC ================= ]" << endl;
 
     // Write output file
-    ofstream outputFile("../MCMC_final_output.csv");
-    outputFile << "Sample No. , E_mu, beta, sig_y, sig_mu, rho" << endl;
-    if (true_param!=nullptr){
-        cout << "... Parameters: E_mu = " << true_param->E_mu << ", " <<
-                "beta = " << true_param->beta << ", " <<
-                "sig_y = " << true_param->sig_y << ", " <<
-                "sig_mu = " << true_param->sig_mu << ", " <<
-                "rho = " << true_param->rho << endl;
-        outputFile << " True value: ," << true_param->E_mu << ", " <<
-                   true_param->beta <<  ", " <<
-                   true_param->sig_y << ", " <<
-                   true_param->sig_mu << ", " <<
-                   true_param->rho << endl;
-    }else {
-        outputFile << "True parameters are unkown...,N/A,N/A,N/A,N/A,N/A" << endl;
-    }
+//    ofstream outputFile("../MCMC_final_output.csv");
+//    outputFile << "Sample No. , E_mu, beta, sig_y, sig_mu, rho" << endl;
+//    if (true_param!=nullptr){
+//        cout << "... Parameters: E_mu = " << true_param->E_mu << ", " <<
+//                "beta = " << true_param->beta << ", " <<
+//                "sig_y = " << true_param->sig_y << ", " <<
+//                "sig_mu = " << true_param->sig_mu << ", " <<
+//                "rho = " << true_param->rho << endl;
+//        outputFile << " True value: ," << true_param->E_mu << ", " <<
+//                   true_param->beta <<  ", " <<
+//                   true_param->sig_y << ", " <<
+//                   true_param->sig_mu << ", " <<
+//                   true_param->rho << endl;
+//    }else {
+//        outputFile << "True parameters are unkown...,N/A,N/A,N/A,N/A,N/A" << endl;
+//    }
+//    outputFile.close();
 
     // Check the input
     if (Y_sample.empty()){
-        outputFile.close();
+
         throw runtime_error("Input Y is empty");
     }
     ulong n_path = Y_sample.size();
@@ -326,7 +327,12 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
         getIntervalSize(mu_input,Y_input);
 
         // Log file
-        string logFileName = "../logfile/MCMC_log_[" + to_string(s+1) + "].csv";
+        string logFileName;
+        if(REFRESH_SIMUL){
+            logFileName= "../log/MCMC_log_simul_" + to_string(s+1) + ".csv";
+        }else {
+            logFileName= "../log/MCMC_log_obs_" + to_string(s+1) + ".csv";
+        }
         ofstream logFile(logFileName);
         logFile << "E_mu, beta, sig_y, sig_mu, rho" << endl;
         logFile << E_mu << ", " <<
