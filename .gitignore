@@ -38,4 +38,5 @@ build/
 # Output files
 *.csv
 *.csv#
+plot_script/.ipynb_checkpoints
 
