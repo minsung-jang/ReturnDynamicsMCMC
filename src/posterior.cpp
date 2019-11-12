@@ -4,27 +4,6 @@ double ReturnDynamicsMCMC::stdNormalCDF(double z){
     return 0.5*(1+erf(z/sqrt(2)));
 }
 
-//VectorXd ReturnDynamicsMCMC::compute_tp1(VectorXd& vec)
-//{
-//    VectorXd rtn = vec.tail(T);
-
-//    return rtn;
-//}
-
-//VectorXd ReturnDynamicsMCMC::compute_tp0(VectorXd& vec)
-//{
-//    VectorXd rtn = vec.head(T);
-
-//    return rtn;
-//}
-
-//VectorXd ReturnDynamicsMCMC::compute_disp_vec(VectorXd& vec1, VectorXd& vec2, double coeff)
-//{
-//    VectorXd rtn=compute_tp1(vec1)-coeff*compute_tp0(vec2);
-
-//    return rtn;
-//}
-
 VectorXd ReturnDynamicsMCMC::compute_tp1(VectorXd& vec)
 {
     VectorXd rtn = vec.tail(T);
@@ -106,7 +85,7 @@ double ReturnDynamicsMCMC::posterior_E_mu(default_random_engine& generator, Vect
 
     // Random Generator
     if (DEBUG)
-        cout << "... dist: ~ N( " << S/W << ", " << 1.0/W << " )" << endl;
+        cout << "... dist: ~ N( " << S/W << ", " << sqrt(1.0/W) << "^2 )" << endl;
 
     normal_distribution<double> dist (S/W, sqrt(1.0/W));
     double rtn=-1.0;
@@ -136,14 +115,6 @@ double ReturnDynamicsMCMC::posterior_beta(default_random_engine& generator, Vect
     VectorXd C_tp1=compute_disp_vec(Y_vec, mu_vec);
     C_tp1 = C_tp1 / sig_y;
 
-//    VectorXd mu_t=compute_tp0(mu_vec);
-//    VectorXd Delta_t =compute_disp_const(mu_t, E_mu);
-//    Delta_t = Delta_t / sig_mu;
-
-//    VectorXd mu_tp1=compute_tp1(mu_vec);
-//    VectorXd Delta_tp1 = compute_disp_const(mu_tp1, E_mu);
-//    Delta_tp1 = Delta_tp1 / sig_mu;
-
     VectorXd ones(T);
     ones.setOnes();
     VectorXd Delta_t = mu_current.head(T)-E_mu*ones;
@@ -153,7 +124,6 @@ double ReturnDynamicsMCMC::posterior_beta(default_random_engine& generator, Vect
 
     // Constants
     double psi = 1.0 / (1.0 - rho*rho);
-    cout << psi << endl;
     double F_sq = prior_F*prior_F;
 
     // W,S
@@ -163,10 +133,8 @@ double ReturnDynamicsMCMC::posterior_beta(default_random_engine& generator, Vect
     double n_mean=S/W;
     double n_var=1.0/W;
 
-    cout << "beta mean: " << n_mean << endl;
-
     if (DEBUG)
-        cout << "... dist: ~ N( " << n_mean << ", " << sqrt(n_var) << " )" << endl;
+        cout << "... dist: ~ N( " << n_mean << ", " << sqrt(n_var) << "^2 )" << endl;
 
     double z_upper = (1.0 - n_mean) / sqrt(n_var);
     double z_lower = (-1.0 - n_mean) / sqrt(n_var); //!!!
@@ -188,7 +156,7 @@ double ReturnDynamicsMCMC::posterior_beta(default_random_engine& generator, Vect
     }else{
         rtn=(z_upper - z_lower)*u+z_lower;
         if (DEBUG)
-            cout << "WARNING: beta was picked with an extreme value... apply an approximation" << endl;
+            cout << "!!! WARNING: beta was picked with an extreme value... apply an approximation" << endl;
     }
     // Transformation "rtn=z" to sigma * z + mu
     rtn = n_mean + sqrt(n_var) * rtn;
@@ -245,8 +213,9 @@ double ReturnDynamicsMCMC::posterior_sig_y(default_random_engine& generator,
     double L_new = exp (K / sig_y_new);
     double u=dist_unif(generator);
 
-//    double log_u=log(dist_unif(generator));
-//    double sig_RHS = K*(sig_y - sig_y_new) / sig_y / sig_y_new;
+    // Otherwise,
+    //double log_u=log(dist_unif(generator));
+    //double sig_RHS = K*(sig_y - sig_y_new) / sig_y / sig_y_new;
 
     if (L_current*u < L_new)
     {
@@ -282,16 +251,14 @@ vector<double> ReturnDynamicsMCMC::posterior_phi_omega(default_random_engine& ge
         cout << "... reparametrization...input [ phi=" << phi << ", omega=" << omega << " ]" << endl;
 
     // Vectors
-    //VectorXd C_tp1=compute_disp_vec(Y_vec, mu_vec);
+//    VectorXd C_tp1=compute_disp_vec(Y_vec, mu_vec);
     VectorXd C_tp1 = Y_current.tail(T) - mu_current.head(T);
     VectorXd gamma= C_tp1 / sig_y;
 
 //    VectorXd mu_t=compute_tp0(mu_vec);
 //    VectorXd Delta_t = compute_disp_const(mu_t, E_mu);
-
 //    VectorXd mu_tp1=compute_tp1(mu_vec);
 //    VectorXd Delta_tp1 = compute_disp_const(mu_tp1, E_mu);
-
     VectorXd ones(T);
     ones.setOnes();
     VectorXd Delta_t = mu_current.head(T)-E_mu*ones;
@@ -305,10 +272,6 @@ vector<double> ReturnDynamicsMCMC::posterior_phi_omega(default_random_engine& ge
     double B = 0.5*delta.dot(delta)+1.0/prior_b-0.5*S*S/W;
     B= 1.0 / B;
 
-    cout << "joint S: " << S << endl;
-    cout << "joint W: " << W << endl;
-    cout << "B: " << B << endl;
-
     // Random generation for omega
     double omega_new = 0.0;
     while (omega_new<=0.0){ // omega > 0
@@ -321,7 +284,7 @@ vector<double> ReturnDynamicsMCMC::posterior_phi_omega(default_random_engine& ge
     double n_mean=S/W;
     double n_var=omega_new/W;
     if (DEBUG)
-        cout << "... dist: ~ N( " << n_mean << ", " << n_var << " )" << endl;
+        cout << "... dist: ~ N( " << n_mean << ", " << sqrt(n_var) << "^2 )" << endl;
 
     // Random generation for phi|omega
     default_random_engine phi_generator;
@@ -340,13 +303,13 @@ vector<double> ReturnDynamicsMCMC::posterior_phi_omega(default_random_engine& ge
     if (DEBUG)
         cout << "... update [ sig=" << sig_mu_new << ", rho=" << rho_new << " ]" << endl;
 
-   sig_mu = sig_mu_new;
-   rho = rho_new;
+    sig_mu = sig_mu_new;
+    rho = rho_new;
 
     vector<double> rtn;
     rtn.clear();
-    rtn.push_back(0.0);
-    rtn.push_back(0.0);
+    rtn.push_back(sig_mu);
+    rtn.push_back(rho);
 
     if (DEBUG)
         cout << endl;
@@ -430,8 +393,8 @@ VectorXd ReturnDynamicsMCMC::posterior_mu(default_random_engine& generator, Vect
 
     mu_current=rtn;
 
-    cout << "Mean: " << rtn.mean() << endl;
-    cout << endl;
+    if (DEBUG)
+        cout << "... Mean of {mu_t}_t={0,...,T} : " << rtn.mean() << endl;
 
     if (DEBUG)
         cout << endl;

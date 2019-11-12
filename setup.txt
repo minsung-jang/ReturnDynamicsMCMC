@@ -1,0 +1,38 @@
+################### MCMC for Return Dynamics #########################
+
+*** Simulation Mode		: no
+*** Input Observation Data      : input.csv 
+
+############################# Simulation #############################
+
+Number of Simulation Paths	: 1
+Number of Simulation Length	: 1000
+Parameters for Simulation
+			E_mu	: 0.1
+			beta	: 0.9
+			sigma_y : 0.15					
+			simga_mu: 0.1
+			rho	: -0.5
+
+######################## MCMC Implementation #########################
+
+Total Iteration			: 10000
+Burn-in Period ratio		: 0.2
+Inital Guess for Paramters
+			E_mu	: 0.05
+			beta	: 0.5
+			sigma_y : 1.0					
+			simga_mu: 1.0
+			rho	: -0.8
+Hyperparamters
+	E_mu	      	      e : 0.0
+                              E : 1.0
+        beta          	      f : 0.0
+                              F : 1.0
+        sigma_y  	 alpha* : 100
+		          beta* : 2.0
+	sigma_mu & rho	      a : 2
+                              b : 200
+
+                            
+

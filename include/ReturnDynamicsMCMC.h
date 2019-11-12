@@ -45,10 +45,16 @@ struct HyperParamSet{
 class ReturnDynamicsMCMC{
 private:
     long T;
+    string input_file_name;
+    bool REFRESH_SIMUL;
+    ParamSet simul_theta;
+    ParamSet init_guess;
+    HyperParamSet hyper_param;
+    int n_simul_path;
+    int n_simul_length;
+    long n_iter;
+    double burn_in_ratio;
 public:
-    // AUX
-    bool _CHECK_STREAM;
-
     // Input sample
     vector<VectorXd> Y_sample;
     vector<VectorXd> mu_sample;
@@ -78,11 +84,17 @@ public:
     // Contructor & Destructor
     ReturnDynamicsMCMC(){
         true_param=nullptr;
-        _CHECK_STREAM=true;
     }
-    ~ReturnDynamicsMCMC(){}
+    ~ReturnDynamicsMCMC(){
+        delete true_param;
+    }
 
     // Member Functions
+    void getInitialSetup(bool DEBUG=false);
+    void displaySimulationSetup();
+    void displayCommonSetup();
+    void getInitialGuess();
+    void getHyperParam();
     // ... Posterior: pre-computation
     double stdNormalCDF(double z);
     VectorXd compute_tp1(VectorXd& vec);
@@ -100,11 +112,9 @@ public:
     VectorXd posterior_mu(default_random_engine& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
     // ... MCMC
     void getIntervalSize(VectorXd& mu_vec, VectorXd& Y_vec);
-    void getInitialGuess(ParamSet& init_guess);
-    void getHyperParam(HyperParamSet& hyper_param);
-    void loadCSV(string file_name);
-    void initSimulation(int& n_path, int& length,ParamSet& simul_thetha, bool OUTPUT_FILE=true);
-    void runMCMC(int& n_path, long& n_iter, ParamSet& init_guess, HyperParamSet& hyper_param, bool LOG_FILE=true);
+    void loadInputData(string& file_name);
+    void initSimulation();
+    void runMCMC(bool DEBUG=false);
 };
 
 #endif
