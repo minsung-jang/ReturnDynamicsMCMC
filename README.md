@@ -32,11 +32,11 @@
 :~$ sudo apt-get install -y apt-get install libeigen3-dev
 ```
 ### Graphic tool in Python script
-- **Python3 **
+- **Python3**
 ```
 sudo apt-get install -y python3 python3-pip python3-dev python3-env
 ```
-- **Numpy & Scipy **
+- **Numpy & Scipy**
 ```
 sudo pip install numpy scipy
 ```
