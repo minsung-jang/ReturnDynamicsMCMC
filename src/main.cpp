@@ -13,6 +13,12 @@ int main()
 
     try {
 
+        //Legacy commands
+//        string ref_param_file = "../ref_result.csv";
+//        string ref_mu_file ="../ref_mu.csv";
+//        rdMCMC->loadTestParam(ref_param_file);
+//        rdMCMC->loadTestmu(ref_mu_file);
+
         rdMCMC->getInitialSetup();
         rdMCMC->runMCMC();
 

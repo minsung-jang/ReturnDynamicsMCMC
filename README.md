@@ -8,7 +8,7 @@
 - Using the shell script below, you may implement MCMC and have figures that summarize final results
 
 ```
-:~$ ./run
+:~$ ./run.sh
 ```
 
 ## [ Results of iterations for the parameters from a MCMC implementation ]

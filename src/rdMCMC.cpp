@@ -7,6 +7,72 @@
 
 #include "ReturnDynamicsMCMC.h"
 
+void ReturnDynamicsMCMC::loadTestParam(string& file_name)
+{
+    ifstream file(file_name);
+
+    E_mu_tmp.clear();
+    beta_tmp.clear();
+    sig_y_tmp.clear();
+    sig_mu_tmp.clear();
+    rho_tmp.clear();
+
+    string str;
+    getline(file, str); // skip the first line
+    while (getline(file, str)){
+        istringstream iss(str);
+        vector<string> tokens;
+        string token;
+        while ( getline(iss, token,',') ){
+            tokens.push_back(token);
+        }
+        E_mu_tmp.push_back(stod(tokens[0]));
+        beta_tmp.push_back(stod(tokens[1]));
+        sig_y_tmp.push_back(stod(tokens[2]));
+        sig_mu_tmp.push_back(stod(tokens[3]));
+        rho_tmp.push_back(stod(tokens[4]));
+        tokens.clear();
+    }
+
+    cout << "Load test param " << endl;
+    cout << "3rd: " << E_mu_tmp[2] << ", "  <<
+         beta_tmp[2] << ", " <<
+         sig_y_tmp[2] << ", " <<
+         sig_mu_tmp[2] << ", "<<
+         rho_tmp[2] << endl;
+}
+
+void ReturnDynamicsMCMC::loadTestmu(string& file_name)
+{
+    vector<double> mu_temp;
+
+    ifstream file(file_name);
+    string str;
+    getline(file, str); // skip the first line
+    while (getline(file, str)){
+        istringstream iss(str);
+        vector<string> tokens;
+        string token;
+        while ( getline(iss, token,',') ){
+            tokens.push_back(token);
+        }
+        mu_temp.push_back(stod(tokens[0]));
+        tokens.clear();
+    }
+
+    cout << "Load test mu" << endl;
+    cout << "load: " << mu_temp[0] << "," <<
+            mu_temp[1] << "," <<
+            mu_temp[2] << "," << endl;
+
+    mu_tmp.resize(long(mu_temp.size()));
+    for (unsigned int i=0; i < mu_temp.size(); i++)
+    {
+        mu_tmp[i]=mu_temp[i];
+    }
+}
+
+
 void ReturnDynamicsMCMC::getIntervalSize(VectorXd& mu_vec, VectorXd& Y_vec)
 {
     if(Y_vec.size()!=mu_vec.size()){
@@ -320,8 +386,8 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
         VectorXd Y_input = Y_sample[s];
         VectorXd mu_input = Y_input;
 
-        Y_current = Y_input;
-        mu_current = mu_input;
+        //Y_current = Y_input;
+        //mu_current = mu_input;
 
         // Determine T
         getIntervalSize(mu_input,Y_input);
@@ -341,8 +407,12 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
                    sig_mu << ", " <<
                    rho << endl;
 
-        random_device seed_gen;
-        default_random_engine main_generator(seed_gen());
+        random_device rd;
+        //default_random_engine main_generator(rd());
+        mt19937_64 main_generator(rd());
+
+        //mu_input=mu_tmp;
+        //mu_current=mu_tmp;
 
         for (long k=0; k < n_iter; k++){
 
@@ -389,7 +459,8 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
             logFile << sig_mu << ", " << rho << endl;
 
             // [5] mu
-            mu_input = posterior_mu(main_generator, mu_input, Y_input,DEBUG);
+            //mu_input=mu_tmp;
+            posterior_mu(main_generator, mu_input, Y_input,DEBUG); //
         }
         clock_t time_end_per_sample = clock();
 

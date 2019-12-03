@@ -1,7 +1,7 @@
 ################### MCMC for Return Dynamics #########################
 
 *** Simulation Mode		: no
-*** Input Observation Data      : input.csv 
+*** Input Observation Data      : ref_simul.csv 
 
 ############################# Simulation #############################
 

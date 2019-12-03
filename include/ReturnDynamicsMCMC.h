@@ -58,8 +58,8 @@ public:
     // Input sample
     vector<VectorXd> Y_sample;
     vector<VectorXd> mu_sample;
-    VectorXd Y_current;
-    VectorXd mu_current;
+    //VectorXd Y_current;
+    //VectorXd mu_current;
 
     // Simulation
     ParamSet* true_param;
@@ -80,6 +80,14 @@ public:
     double prior_beta;
     double prior_a;
     double prior_b;
+
+    // TEST
+    vector<double> E_mu_tmp;
+    vector<double> beta_tmp;
+    vector<double> sig_y_tmp;
+    vector<double> sig_mu_tmp;
+    vector<double> rho_tmp;
+    VectorXd mu_tmp;
 
     // Contructor & Destructor
     ReturnDynamicsMCMC(){
@@ -103,18 +111,23 @@ public:
     VectorXd compute_disp_const(VectorXd& vec, double coeff);
     double compute_K(VectorXd& mu_vec, VectorXd& Y_vec);
     // ... Posterior
-    double posterior_E_mu(default_random_engine& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
-    double posterior_beta(default_random_engine& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
-    double posterior_sig_y(default_random_engine& generator,
+    double posterior_E_mu(mt19937_64& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+    double posterior_beta(mt19937_64& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+    double posterior_sig_y(mt19937_64& generator,
                            VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
-    vector<double> posterior_phi_omega(default_random_engine& generator1,
+    vector<double> posterior_phi_omega(mt19937_64& generator1,
                                        VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
-    VectorXd posterior_mu(default_random_engine& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+    void posterior_mu(mt19937_64& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
     // ... MCMC
     void getIntervalSize(VectorXd& mu_vec, VectorXd& Y_vec);
     void loadInputData(string& file_name);
     void initSimulation();
     void runMCMC(bool DEBUG=false);
+
+    // ... TEST
+    void loadTestParam(string& file_name);
+    void loadTestmu(string& file_name);
+
 };
 
 #endif
