@@ -4,6 +4,5 @@ cd build
 cmake ..
 make
 ./ReturnDynamicsMCMC
-cd ../
-#cd ../plot_script
-#python3 plot_script.py
+cd ../plot_script
+python3 plot_script.py
