@@ -58,8 +58,6 @@ public:
     // Input sample
     vector<VectorXd> Y_sample;
     vector<VectorXd> mu_sample;
-    //VectorXd Y_current;
-    //VectorXd mu_current;
 
     // Simulation
     ParamSet* true_param;
@@ -103,6 +101,7 @@ public:
     void displayCommonSetup();
     void getInitialGuess();
     void getHyperParam();
+
     // ... Posterior: pre-computation
     double stdNormalCDF(double z);
     VectorXd compute_tp1(VectorXd& vec);
@@ -110,6 +109,7 @@ public:
     VectorXd compute_disp_vec(VectorXd& vec1, VectorXd& vec2, double coeff=1.0);
     VectorXd compute_disp_const(VectorXd& vec, double coeff);
     double compute_K(VectorXd& mu_vec, VectorXd& Y_vec);
+
     // ... Posterior
     double posterior_E_mu(mt19937_64& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
     double posterior_beta(mt19937_64& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
@@ -118,6 +118,7 @@ public:
     vector<double> posterior_phi_omega(mt19937_64& generator1,
                                        VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
     void posterior_mu(mt19937_64& generator, VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG=false);
+
     // ... MCMC
     void getIntervalSize(VectorXd& mu_vec, VectorXd& Y_vec);
     void loadInputData(string& file_name);
@@ -125,8 +126,8 @@ public:
     void runMCMC(bool DEBUG=false);
 
     // ... TEST
-    void loadTestParam(string& file_name);
-    void loadTestmu(string& file_name);
+    //void loadTestParam(string& file_name);
+    //void loadTestmu(string& file_name);
 
 };
 

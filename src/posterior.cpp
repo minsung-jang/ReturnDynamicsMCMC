@@ -1,3 +1,10 @@
+/**
+ * Implementation of MCMC algorithm for Return Dynamics in C++
+ *
+ * Copyright (C) 2019 Minsung Jang < msjang at iastate dot edu >
+ *
+ */
+
 #include "ReturnDynamicsMCMC.h"
 
 double ReturnDynamicsMCMC::stdNormalCDF(double z){
@@ -137,7 +144,8 @@ double ReturnDynamicsMCMC::posterior_beta(mt19937_64& generator, VectorXd& mu_ve
         cout << "... dist: ~ N( " << n_mean << ", " << sqrt(n_var) << "^2 )" << endl;
 
     double z_upper = (1.0 - n_mean) / sqrt(n_var);
-    double z_lower = (-1.0 - n_mean) / sqrt(n_var); //!!!
+    double z_lower = (-1.0 - n_mean) / sqrt(n_var);
+
     if (DEBUG)
         cout << "... z_lower: " << z_lower << ", z_upper: " << z_upper << endl;
 
@@ -176,11 +184,11 @@ double ReturnDynamicsMCMC::posterior_beta(mt19937_64& generator, VectorXd& mu_ve
 double ReturnDynamicsMCMC::posterior_sig_y(mt19937_64& generator,
                                            VectorXd& mu_vec, VectorXd& Y_vec, bool DEBUG)
 {
-//    if (DEBUG)
-//        cout << "[Posterior] sigma_y" << endl;
-//    if (DEBUG)
-//        cout << "... input [ E_mu=" << E_mu << ", beta = " << beta << ", rho = " <<
-//                rho << ", sig_y = " << sig_y << ", sig_mu = " << sig_mu << " ] " <<endl;
+    if (DEBUG)
+        cout << "[Posterior] sigma_y" << endl;
+    if (DEBUG)
+        cout << "... input [ E_mu=" << E_mu << ", beta = " << beta << ", rho = " <<
+                rho << ", sig_y = " << sig_y << ", sig_mu = " << sig_mu << " ] " <<endl;
 
     double K = compute_K(mu_vec, Y_vec);
     if (DEBUG)
@@ -203,28 +211,11 @@ double ReturnDynamicsMCMC::posterior_sig_y(mt19937_64& generator,
     }
     sig_y_new = 1.0 / sqrt(sig_y_new);
 
-//    if (DEBUG)
-//        cout << "... New: " << sig_y_new << ", Current: " << sig_y << endl;
-    if(DEBUG)
-        cout << "... B: " << B << endl;
-
-    if(DEBUG)
-        cout << "... Const: " << exp(K) << endl;
-
     // Compute L(sigma) and apply the criterion that determines updating sig_y* or not.
+    // Take log to avoid overflowing issues
     uniform_real_distribution<double> dist_unif (0.0, 1.0);
-
-    //double L_current = exp (K / sig_y);
-    //double L_new = exp (K / sig_y_new);
     double u=dist_unif(generator);
-
-
-    // Otherwise,
-    //double log_u=log(dist_unif(generator));
-    //double sig_RHS = K*(sig_y - sig_y_new) / sig_y / sig_y_new;
-
     double sig_LHS = K*(1.0 / sig_y_new - 1.0 /sig_y);
-    //cout << "Left hand side: " << sig_LHS << endl;
 
     if (sig_LHS < log(u))
     {
@@ -257,14 +248,8 @@ vector<double> ReturnDynamicsMCMC::posterior_phi_omega(mt19937_64& generator,
         cout << "... reparametrization...input [ phi=" << phi << ", omega=" << omega << " ]" << endl;
 
     // Vectors
-//    VectorXd C_tp1=compute_disp_vec(Y_vec, mu_vec);
     VectorXd C_tp1 = Y_vec.tail(T) - mu_vec.head(T);
     VectorXd gamma= C_tp1 / sig_y;
-
-//    VectorXd mu_t=compute_tp0(mu_vec);
-//    VectorXd Delta_t = compute_disp_const(mu_t, E_mu);
-//    VectorXd mu_tp1=compute_tp1(mu_vec);
-//    VectorXd Delta_tp1 = compute_disp_const(mu_tp1, E_mu);
     VectorXd ones(T);
     ones.setOnes();
     VectorXd Delta_t = mu_vec.head(T)-E_mu*ones;
@@ -389,7 +374,5 @@ void ReturnDynamicsMCMC::posterior_mu(mt19937_64& generator, VectorXd& mu_vec, V
 
     if (DEBUG)
         cout << endl;
-
-    //return rtn;
 }
 

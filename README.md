@@ -11,18 +11,42 @@
 :~$ ./run.sh
 ```
 
-## [ Results of iterations for the parameters from a MCMC implementation ]
+## [ Summary for the parameters from MCMC implementations ]
 
-![E_mu](./plot_script/E_mu.png)
+![table](./plot_script/posterior_output.png)
 
-![beta](./plot_script/beta.png)
+## [ Comparison between the true and estimated mu ]
+### The last mu
 
-![sigma_y](./plot_script/sigma_y.png)
+![mu_last](./plot_script/mu_last.png)
 
-![sigma_mu](./plot_script/sigma_mu.png)
+### The last 100 iteration-averaged mu
 
-![rho](./plot_script/rho.png)
+![mu_mean](./plot_script/mu_mean.png)
 
+## [ Chainplot for each parameter in the total iterations ]
+
+![E_mu](./plot_script/E_mu_total.png)
+
+![beta](./plot_script/beta_total.png)
+
+![sigma_y](./plot_script/sigma_y_total.png)
+
+![sigma_mu](./plot_script/sigma_mu_total.png)
+
+![rho](./plot_script/rho_total.png)
+
+## [ Chainplot for each parameter in early stage of iterations ]
+
+![E_mu_f](./plot_script/E_mu_first.png)
+
+![beta_f](./plot_script/beta_first.png)
+
+![sigma_y_f](./plot_script/sigma_y_first.png)
+
+![sigma_mu_f](./plot_script/sigma_mu_first.png)
+
+![rho_f](./plot_script/rho_first.png)
 
 
 ## [ Prerequisites for this code in Ubuntu ]

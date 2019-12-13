@@ -1,3 +1,9 @@
+/**
+ *
+ *  https://github.com/SurajGupta/r-source/blob/master/src/nmath/qnorm.c
+ *
+ */
+
 #include "MyStatDist.h"
 
 #define R_D_Lval(p)	(lower_tail ? (p) : (0.5 - (p) + 0.5))	/*  p  */

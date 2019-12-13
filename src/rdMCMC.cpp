@@ -7,70 +7,70 @@
 
 #include "ReturnDynamicsMCMC.h"
 
-void ReturnDynamicsMCMC::loadTestParam(string& file_name)
-{
-    ifstream file(file_name);
+//void ReturnDynamicsMCMC::loadTestParam(string& file_name)
+//{
+//    ifstream file(file_name);
 
-    E_mu_tmp.clear();
-    beta_tmp.clear();
-    sig_y_tmp.clear();
-    sig_mu_tmp.clear();
-    rho_tmp.clear();
+//    E_mu_tmp.clear();
+//    beta_tmp.clear();
+//    sig_y_tmp.clear();
+//    sig_mu_tmp.clear();
+//    rho_tmp.clear();
 
-    string str;
-    getline(file, str); // skip the first line
-    while (getline(file, str)){
-        istringstream iss(str);
-        vector<string> tokens;
-        string token;
-        while ( getline(iss, token,',') ){
-            tokens.push_back(token);
-        }
-        E_mu_tmp.push_back(stod(tokens[0]));
-        beta_tmp.push_back(stod(tokens[1]));
-        sig_y_tmp.push_back(stod(tokens[2]));
-        sig_mu_tmp.push_back(stod(tokens[3]));
-        rho_tmp.push_back(stod(tokens[4]));
-        tokens.clear();
-    }
+//    string str;
+//    getline(file, str); // skip the first line
+//    while (getline(file, str)){
+//        istringstream iss(str);
+//        vector<string> tokens;
+//        string token;
+//        while ( getline(iss, token,',') ){
+//            tokens.push_back(token);
+//        }
+//        E_mu_tmp.push_back(stod(tokens[0]));
+//        beta_tmp.push_back(stod(tokens[1]));
+//        sig_y_tmp.push_back(stod(tokens[2]));
+//        sig_mu_tmp.push_back(stod(tokens[3]));
+//        rho_tmp.push_back(stod(tokens[4]));
+//        tokens.clear();
+//    }
 
-    cout << "Load test param " << endl;
-    cout << "3rd: " << E_mu_tmp[2] << ", "  <<
-         beta_tmp[2] << ", " <<
-         sig_y_tmp[2] << ", " <<
-         sig_mu_tmp[2] << ", "<<
-         rho_tmp[2] << endl;
-}
+//    cout << "Load test param " << endl;
+//    cout << "3rd: " << E_mu_tmp[2] << ", "  <<
+//         beta_tmp[2] << ", " <<
+//         sig_y_tmp[2] << ", " <<
+//         sig_mu_tmp[2] << ", "<<
+//         rho_tmp[2] << endl;
+//}
 
-void ReturnDynamicsMCMC::loadTestmu(string& file_name)
-{
-    vector<double> mu_temp;
+//void ReturnDynamicsMCMC::loadTestmu(string& file_name)
+//{
+//    vector<double> mu_temp;
 
-    ifstream file(file_name);
-    string str;
-    getline(file, str); // skip the first line
-    while (getline(file, str)){
-        istringstream iss(str);
-        vector<string> tokens;
-        string token;
-        while ( getline(iss, token,',') ){
-            tokens.push_back(token);
-        }
-        mu_temp.push_back(stod(tokens[0]));
-        tokens.clear();
-    }
+//    ifstream file(file_name);
+//    string str;
+//    getline(file, str); // skip the first line
+//    while (getline(file, str)){
+//        istringstream iss(str);
+//        vector<string> tokens;
+//        string token;
+//        while ( getline(iss, token,',') ){
+//            tokens.push_back(token);
+//        }
+//        mu_temp.push_back(stod(tokens[0]));
+//        tokens.clear();
+//    }
 
-    cout << "Load test mu" << endl;
-    cout << "load: " << mu_temp[0] << "," <<
-            mu_temp[1] << "," <<
-            mu_temp[2] << "," << endl;
+//    cout << "Load test mu" << endl;
+//    cout << "load: " << mu_temp[0] << "," <<
+//            mu_temp[1] << "," <<
+//            mu_temp[2] << "," << endl;
 
-    mu_tmp.resize(long(mu_temp.size()));
-    for (unsigned int i=0; i < mu_temp.size(); i++)
-    {
-        mu_tmp[i]=mu_temp[i];
-    }
-}
+//    mu_tmp.resize(long(mu_temp.size()));
+//    for (unsigned int i=0; i < mu_temp.size(); i++)
+//    {
+//        mu_tmp[i]=mu_temp[i];
+//    }
+//}
 
 
 void ReturnDynamicsMCMC::getIntervalSize(VectorXd& mu_vec, VectorXd& Y_vec)
@@ -305,11 +305,12 @@ void ReturnDynamicsMCMC::initSimulation(){
         // Output file per path
         string file_name = "../log/simul_path_" + to_string(k+1) + ".csv";
         ofstream outputFile(file_name);
-        outputFile << "Parameters: E_mu = " << simul_theta.E_mu << ", " <<
-                      "beta = " << simul_theta.beta << ", " <<
-                      "sig_y = " << simul_theta.sig_y << ", " <<
-                      "sig_mu = " << simul_theta.sig_mu << ", " <<
-                      "rho = " << simul_theta.rho << endl;
+        outputFile << "E_mu, beta, sig_y, sig_mu, rho" << endl;
+        outputFile << simul_theta.E_mu << ", " <<
+                      simul_theta.beta << ", " <<
+                      simul_theta.sig_y << ", " <<
+                      simul_theta.sig_mu << ", " <<
+                      simul_theta.rho << endl;
         outputFile << "Y , mu" << endl;
 
         // Generate two indepedent standard normal
@@ -350,23 +351,27 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
     cout << "[ ================= Run MCMC ================= ]" << endl;
 
     // Write output file
-//    ofstream outputFile("../MCMC_final_output.csv");
-//    outputFile << "Sample No. , E_mu, beta, sig_y, sig_mu, rho" << endl;
-//    if (true_param!=nullptr){
-//        cout << "... Parameters: E_mu = " << true_param->E_mu << ", " <<
-//                "beta = " << true_param->beta << ", " <<
-//                "sig_y = " << true_param->sig_y << ", " <<
-//                "sig_mu = " << true_param->sig_mu << ", " <<
-//                "rho = " << true_param->rho << endl;
-//        outputFile << " True value: ," << true_param->E_mu << ", " <<
-//                   true_param->beta <<  ", " <<
-//                   true_param->sig_y << ", " <<
-//                   true_param->sig_mu << ", " <<
-//                   true_param->rho << endl;
-//    }else {
-//        outputFile << "True parameters are unkown...,N/A,N/A,N/A,N/A,N/A" << endl;
-//    }
-//    outputFile.close();
+    ofstream outputFile("../posterior_output.csv");
+    outputFile << "Sample No. , E_mu, beta, sig_y, sig_mu, rho" << endl;
+    if (true_param!=nullptr){
+        cout << "... Parameters: E_mu = " << true_param->E_mu << ", " <<
+                "beta = " << true_param->beta << ", " <<
+                "sig_y = " << true_param->sig_y << ", " <<
+                "sig_mu = " << true_param->sig_mu << ", " <<
+                "rho = " << true_param->rho << endl;
+        outputFile << " True value: ," << true_param->E_mu << ", " <<
+                   true_param->beta <<  ", " <<
+                   true_param->sig_y << ", " <<
+                   true_param->sig_mu << ", " <<
+                   true_param->rho << endl;
+    }else {
+        outputFile << "True parameters are unkown...,N/A,N/A,N/A,N/A,N/A" << endl;
+    }
+    outputFile << "Starting point: , " << E_mu << ", " <<
+                  beta << ", " <<
+                  sig_y << ", " <<
+                  sig_mu << ", " <<
+                  rho << endl;
 
     // Check the input
     if (Y_sample.empty()){
@@ -378,6 +383,8 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
     // Per sample
     for (unsigned long s=0; s < n_path; s++){
         cout << ">> Sample path No." << s+1 << " has started" << endl;
+        // Refresh starting point
+        getInitialGuess();
 
         // Clock
         clock_t time_begin_per_sample=clock();
@@ -385,9 +392,6 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
         // Input
         VectorXd Y_input = Y_sample[s];
         VectorXd mu_input = Y_input;
-
-        //Y_current = Y_input;
-        //mu_current = mu_input;
 
         // Determine T
         getIntervalSize(mu_input,Y_input);
@@ -407,13 +411,24 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
                    sig_mu << ", " <<
                    rho << endl;
 
+        // Random number generator
         random_device rd;
-        //default_random_engine main_generator(rd());
         mt19937_64 main_generator(rd());
 
-        //mu_input=mu_tmp;
-        //mu_current=mu_tmp;
+        // Posterior mean initialization
+        double mean_E_mu=0.0;
+        double mean_beta=0.0;
+        double mean_sig_y=0.0;
+        double mean_sig_mu=0.0;
+        double mean_rho=0.0;
+        VectorXd mean_mu=mu_input;
+        mean_mu.setZero();
+        long n_burn_in=long(n_iter*burn_in_ratio);
+        long n_latent=100;
+        if( n_iter < 100 )
+            n_latent=n_iter;
 
+        // Iteration
         for (long k=0; k < n_iter; k++){
 
             if (DEBUG)
@@ -426,6 +441,8 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
             if(isnan(E_mu))
                 throw runtime_error("E_mu is not real");
             logFile << E_mu << ", " ;
+            if( k > n_burn_in )
+                mean_E_mu = mean_E_mu + E_mu;
 
             // [2] beta
             beta = posterior_beta(main_generator, mu_input, Y_input,DEBUG);
@@ -434,6 +451,8 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
             if(isnan(beta))
                 throw runtime_error("beta is not real");
             logFile << beta << ", " ;
+            if( k > n_burn_in )
+                mean_beta = mean_beta + beta;
 
             // [3] sig_y
             sig_y = posterior_sig_y(main_generator, mu_input, Y_input,DEBUG);
@@ -442,8 +461,10 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
             if(isnan(sig_y))
                 throw runtime_error("sig_y is not real");
             logFile << sig_y << ", ";
+            if( k > n_burn_in )
+                mean_sig_y = mean_sig_y + sig_y;
 
-            //[4]  sig_mu and rho
+            // [4] sig_mu and rho
             vector<double> phi_omega = posterior_phi_omega(main_generator,
                                                            mu_input, Y_input,DEBUG);
             sig_mu = phi_omega[0];
@@ -451,20 +472,42 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
                 throw runtime_error("sig_mu diverges to infinity");
             if(isnan(sig_mu))
                 throw runtime_error("sig_mu is not real");
+            if( k > n_burn_in )
+                mean_sig_mu = mean_sig_mu + sig_mu;
+
             rho = phi_omega[1];
             if(isinf(rho))
                 throw runtime_error("rho diverges to infinity");
             if(isnan(rho))
                 throw runtime_error("rho is not real");
             logFile << sig_mu << ", " << rho << endl;
+            if( k > n_burn_in )
+                mean_rho = mean_rho + rho;
 
             // [5] mu
-            //mu_input=mu_tmp;
-            posterior_mu(main_generator, mu_input, Y_input,DEBUG); //
+            posterior_mu(main_generator, mu_input, Y_input,DEBUG);
+            if( k > n_iter-n_latent )
+                mean_mu = mean_mu + mu_input;
         }
-        clock_t time_end_per_sample = clock();
+        // Compute posterior mean
+        mean_E_mu = mean_E_mu / double(n_iter-n_burn_in);
+        mean_beta = mean_beta / double(n_iter-n_burn_in);
+        mean_sig_y = mean_sig_y / double(n_iter-n_burn_in);
+        mean_sig_mu = mean_sig_mu / double(n_iter-n_burn_in);
+        mean_rho = mean_rho / double(n_iter-n_burn_in);
+        mean_mu = mean_mu / n_latent;
 
-        // Elapsed time
+        // Save latent variables
+        ofstream latentFile("../log/MCMC_log_latent_" + to_string(s+1) + ".csv");
+        latentFile << "the last, the last " << n_latent << " averaged mu" << endl;
+        for (long m=0; m<mean_mu.size(); m++){
+            latentFile << mu_input[m] << "," << mean_mu[m] << endl;
+        }
+        latentFile.close();
+
+        // Elapsed time per path
+        cout << ">> Sample path No." << s+1 << " has been completed" << endl;
+        clock_t time_end_per_sample = clock();
         double elapsed_time_per_sample = double(time_end_per_sample - time_begin_per_sample) / CLOCKS_PER_SEC;
         cout << "... Elapsed Time : " << elapsed_time_per_sample <<" [sec] for " <<
                 n_iter << " iterations" << endl;
@@ -474,20 +517,21 @@ void ReturnDynamicsMCMC::runMCMC(bool DEBUG){
         logFile.close();
 
         // Write a final output file
-//        outputFile << s+1 << " , " <<
-//                      E_mu << ", " <<
-//                      beta << ", " <<
-//                      sig_y << ", " <<
-//                      sig_mu << ", " <<
-//                      rho << ", " <<endl;
-        cout << ">> Sample path No." << s+1 << " has been completed" << endl;
+        outputFile << s+1 << " , " <<
+                      mean_E_mu << ", " <<
+                      mean_beta << ", " <<
+                      mean_sig_y << ", " <<
+                      mean_sig_mu << ", " <<
+                      mean_rho <<endl;
+
     }
 
+    // Total elapsed time
     clock_t time_end=clock();
-
     double elapsed_time = double(time_end - time_begin) / CLOCKS_PER_SEC;
     cout << "Elapsed Time in total: " << elapsed_time <<" [sec]" << endl;
-//    outputFile << endl << "Elapsed Time in total: " << elapsed_time <<" [sec]" << endl;
+    outputFile << endl << "Elapsed Time in total: " << elapsed_time <<" [sec]" << endl;
 
-//    outputFile.close();
+    // Close the final output
+    outputFile.close();
 }

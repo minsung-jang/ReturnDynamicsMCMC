@@ -1,3 +1,10 @@
+/**
+ * Implementation of MCMC algorithm for Return Dynamics in C++
+ *
+ * Copyright (C) 2019 Minsung Jang < msjang at iastate dot edu >
+ *
+ */
+
 #ifndef MYSTATDIST_H
 #define MYSTATDIST_H
 
@@ -15,8 +22,7 @@ class StandardNormalDistribution : public MyStatDist {
  public:
   StandardNormalDistribution();
   virtual ~StandardNormalDistribution();
-
-  // Inverse cumulative distribution function (aka the probit function)
+  // Inverse cumulative distribution function
   virtual double inv_cdf(const double& quantile) const;
 };
 

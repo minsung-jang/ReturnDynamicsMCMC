@@ -1,11 +1,11 @@
 ################### MCMC for Return Dynamics #########################
 
-*** Simulation Mode		: no
+*** Simulation Mode		: yes
 *** Input Observation Data      : ref_simul.csv 
 
 ############################# Simulation #############################
 
-Number of Simulation Paths	: 1
+Number of Simulation Paths	: 3
 Number of Simulation Length	: 1000
 Parameters for Simulation
 			E_mu	: 0.1
@@ -16,7 +16,7 @@ Parameters for Simulation
 
 ######################## MCMC Implementation #########################
 
-Total Iteration			: 10000
+Total Iteration			: 50000
 Burn-in Period ratio		: 0.2
 Inital Guess for Paramters
 			E_mu	: 0.05
