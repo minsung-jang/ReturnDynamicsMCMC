@@ -1,1 +1,2 @@
-static/* linguist-vendored
+* linguist-vendored
+*.ipynb linguist-vendored=false
